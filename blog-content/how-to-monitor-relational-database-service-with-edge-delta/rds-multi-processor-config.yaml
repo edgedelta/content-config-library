@@ -1,0 +1,177 @@
+- name: s3_input_00dc_multiprocessor
+  type: sequence
+  user_description: Multi Processor
+  processors:
+  - type: ottl_transform
+    metadata: '{"id":"czR8H9WN5t0mpLMGegRpW","type":"parse-json","name":"Parse JSON"}'
+    data_types:
+    - log
+    statements: |-
+      set(cache["parsed-json"], ParseJSON(body))
+      merge_maps(attributes, cache["parsed-json"], "upsert") where IsMap(attributes) and IsMap(cache["parsed-json"])
+      set(attributes, cache["parsed-json"]) where not (IsMap(attributes) and IsMap(cache["parsed-json"]))
+  - type: extract_metric
+    metadata: '{"id":"ijWzVQkuLBUzrHKWAqOqM","type":"extract_metric","name":"Extract
+      Metric"}'
+    keep_item: true
+    data_types:
+    - log
+    extract_metric_rules:
+    - name: BinLogDiskUsage
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "BinLogDiskUsage"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: BurstBalance
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "BurstBalance"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: CPUCreditBalance
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "CPUCreditBalance"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: CPUUtilization
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "CPUUtilization"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: DatabaseConnections
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "DatabaseConnections"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: CPUCreditBalance
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "CPUCreditBalance"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: CPUCreditUsage
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "CPUCreditUsage"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: CPUSurplusCreditBalance
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "CPUSurplusCreditBalance"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: CPUSurplusCreditsCharged
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "CPUSurplusCreditsCharged"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: DiskQueueDepth
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "DiskQueueDepth"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: EBSByteBalance%
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "EBSByteBalance%"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: EBSIOBalance%
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "EBSIOBalance%"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: FreeableMemory
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "FreeableMemory"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: NetworkReceiveThroughput
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "NetworkReceiveThroughput"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: NetworkTransmitThroughput
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "NetworkTransmitThroughput"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: ReadIOPS
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "ReadIOPS"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: WriteIOPS
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "WriteIOPS"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: ReadLatency
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "ReadLatency"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: WriteLatency
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "WriteLatency"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: SwapUsage
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "SwapUsage"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: LVMWriteIOPS
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "LVMWriteIOPS"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: FreeStorageSpace
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "FreeStorageSpace"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: ReadThroughput
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "ReadThroughput"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: WriteThroughput
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "WriteThroughput"
+      gauge:
+        value: attributes["value"]["sum"]
+    - name: LVMReadIOPS
+      unit: "1"
+      conditions:
+      - attributes["metric_name"] == "LVMReadIOPS"
+      gauge:
+        value: attributes["value"]["sum"]
+  - type: ottl_transform
+    metadata: '{"id":"6_wHkAHFdcYPX4BkRYYxi","type":"ottl_transform","name":"Custom"}'
+    final: true
+    data_types:
+    - log
+    statements: |-
+      // Add your custom code here
+      set(body, "RDS Standard Metric Received")
